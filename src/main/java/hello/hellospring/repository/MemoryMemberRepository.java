@@ -1,12 +1,14 @@
 package hello.hellospring.repository;
 
 import hello.hellospring.domain.Member;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+//@Repository
 public class MemoryMemberRepository implements MemberRepository {
 
-    private static Map<Long, Member> store = new HashMap<>(); //메모리 저장용
+    private static Map<Long, Member> store = new HashMap<>(); //메모리 저장용 //스태틱으로 문제해결
     private static long sequence = 0L; //시퀀스 0,1,2,3 이런식으로 키값을 만들어주는것 원래는 동시성문제때문에 다르게해야함
 
     @Override

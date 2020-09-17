@@ -21,22 +21,38 @@ public class MemberService {
 
     //회원가입
     public Long join(Member member){
-        //같은 이름이 있는 중복회원X
-        validateDuplicateMember(member);
-        memberRepository.save(member);
-        return member.getId();
+
+        long start = System.currentTimeMillis();
+
+        try{
+            //같은 이름이 있는 중복회원X
+            validateDuplicateMember(member);
+            memberRepository.save(member);
+            return member.getId();       //AOP를 사용하면 이부분들만 남기고 지울수있음
+        } finally {
+            long finish = System.currentTimeMillis();
+            long timeMs = finish - start;
+            System.out.println("join = " + timeMs + "ms");
+        }
     }
     //위에를 리팩토링해서 새롭게 만들어줌 ctrl+alt+shift+t
     private void validateDuplicateMember(Member member) {
         memberRepository.findByName(member.getName())
             .ifPresent(m -> {
-            throw new IllegalStateException(("이미존재하는 회원입니다."));
+            throw new IllegalStateException(("이미 존재하는 회원입니다."));
         });
     }
 
     //전체 회원 조회
     public List<Member> findMembers(){
-         return memberRepository.findAll();
+        long start = System.currentTimeMillis();
+        try {
+            return memberRepository.findAll();
+        } finally {
+            long finish = System.currentTimeMillis();
+            long timeMs = finish - start;
+            System.out.println("findMembers = " + timeMs + "ms");
+        }
     }
 
     public  Optional<Member> findOne(Long memberId){
